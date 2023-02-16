@@ -1,197 +1,35 @@
-# Flutter_exploration
+# Big Bug 耗时一整天
 
-Reference: [Get Started](https://docs.flutter.dev/get-started/install), [中文开发者社区](https://flutterchina.club/), [OpenSource](https://doc.flutterchina.club/opensource.html), [Flutter Book](https://book.flutterchina.club/)
+简单总结记录一下吧
 
+没有深入了解的情况下，贸然的跟着教程改变了 `pubspec.yaml` 中的 `cloud_firebase` 依赖版本还混淆了 pod 的 install 和 update指令，错误操作下引起了后续 ios flutter调试失败。即使不断切换网络，更改 `hosts`，在 `pod install` 上面花费了大量时间，都并没有起到作用。
 
+期间我尝试了找到 gitee 的 Pod 源，这个确实可以起到一定的作用，但是在引用第三方源的时候，他的 submodule 的 url 貌似依然比较难更改
 
+pod install 的时候可能在临时盘如 /private/var/folders/fc/.../T/... 当我再想打开时
 
-## <font face="Times New Roman"> Install</font>
+>  (base) MacBook-Pro:d20230217-51146-srml69 gsq$ open .
+>
+> 2023-02-17 04:30:44.537 open[3798:380621] CFURLCopyResourcePropertyForKey failed because it was passed a URL which has no scheme
+>
+> 2023-02-17 04:30:44.538 open[3798:380621] CFURLCopyResourcePropertyForKey failed because it was passed a URL which has no scheme
+>
+> No application knows how to open URL ./ (Error Domain=NSOSStatusErrorDomain Code=-10814 "kLSApplicationNotFoundErr: E.g. no application claims the file" UserInfo={_LSLine=1489, _LSFunction=runEvaluator}).
 
-```
-(base) bogon:flutter gsq$ flutter doctor
+期间参考了一些回答和文章
+[1] [ 解决gRPC源码克隆速度慢的问题 ](https://www.jianshu.com/p/969ad8be9f8d)
+[2] [[Cloud Firestore\] fatal error: module 'cloud_firestore' not found · Issue #1979 · firebase / flutterfire ](https://github.com/firebase/flutterfire/issues/1979)
+[3] [Module 'cloud_firestore' not found in GeneratedPluginRegistrant.h · Discussion #8409 · firebase/firebase-ios-sdk ](https://github.com/firebase/firebase-ios-sdk/discussions/8409) - 未解决
+[4] [CocoaPods Guides - Getting Started](https://guides.cocoapods.org/using/getting-started.html#installation)
+[5] [Xcode build failure · Issue #109774 · flutter / flutter ](https://github.com/flutter/flutter/issues/109774) 另: warning: Stale file
+[6] 作者: 开始 pod install 前 `rm -rf ~/.cocoapods/repos/trunk` 这个可以解决版本冲突 ( 问题表现有如 [JSON::ParserError](https://github.com/CocoaPods/CocoaPods/issues/9578) - X )，但是换源之后就没有关系了
+[7] [[Cloud Firestore\] doesn't work with IOS (get stuck on pod install gRPC-Core) · Issue #2533 · firebase / flutterfire ](https://github.com/firebase/flutterfire/issues/2533) 类似问题
 
-  ╔════════════════════════════════════════════════════════════════════════════╗
-  ║                 Welcome to Flutter! - https://flutter.dev                  ║
-  ║                                                                            ║
-  ║ The Flutter tool uses Google Analytics to anonymously report feature usage ║
-  ║ statistics and basic crash reports. This data is used to help improve      ║
-  ║ Flutter tools over time.                                                   ║
-  ║                                                                            ║
-  ║ Flutter tool analytics are not sent on the very first run. To disable      ║
-  ║ reporting, type 'flutter config --no-analytics'. To display the current    ║
-  ║ setting, type 'flutter config'. If you opt out of analytics, an opt-out    ║
-  ║ event will be sent, and then no further information will be sent by the    ║
-  ║ Flutter tool.                                                              ║
-  ║                                                                            ║
-  ║ By downloading the Flutter SDK, you agree to the Google Terms of Service.  ║
-  ║ Note: The Google Privacy Policy describes how data is handled in this      ║
-  ║ service.                                                                   ║
-  ║                                                                            ║
-  ║ Moreover, Flutter includes the Dart SDK, which may send usage metrics and  ║
-  ║ crash reports to Google.                                                   ║
-  ║                                                                            ║
-  ║ Read about data we send with crash reports:                                ║
-  ║ https://flutter.dev/docs/reference/crash-reporting                         ║
-  ║                                                                            ║
-  ║ See Google's privacy policy:                                               ║
-  ║ https://policies.google.com/privacy                                        ║
-  ╚════════════════════════════════════════════════════════════════════════════╝
+问题千千万 ( \*\_\_\* ; )
 
-Running "flutter pub get" in flutter_tools...                      12.5s
-Doctor summary (to see all details, run flutter doctor -v):
-[✓] Flutter (Channel stable, 3.3.10, on macOS 12.5.1 21G83 darwin-x64, locale en-CN)
-[✗] Android toolchain - develop for Android devices
-    ✗ Unable to locate Android SDK.
-      Install Android Studio from: https://developer.android.com/studio/index.html
-      On first launch it will assist you in installing the Android SDK components.
-      (or visit https://flutter.dev/docs/get-started/install/macos#android-setup for detailed instructions).
-      If the Android SDK has been installed to a custom location, please use
-      `flutter config --android-sdk` to update to that location.
+最后还是在普通网络环境下，`pod install --verbose --no-repo-update`
 
-[!] Xcode - develop for iOS and macOS (Xcode 14.2)
-    ✗ CocoaPods not installed.
-        CocoaPods is used to retrieve the iOS and macOS platform side's plugin code that responds to your plugin usage on the Dart side.
-        Without CocoaPods, plugins will not work on iOS or macOS.
-        For more info, see https://flutter.dev/platform-plugins
-      To install see https://guides.cocoapods.org/using/getting-started.html#installation for instructions.
-[✓] Chrome - develop for the web
-[!] Android Studio (not installed)
-[✓] VS Code (version 1.74.3)
-[✓] Connected device (2 available)
-HTTP Host availability check is taking a long time...[!] HTTP Host Availability
-    ✗ HTTP host "https://maven.google.com/" is not reachable. Reason: An error occurred while checking the HTTP host: Operation timed out
-    ✗ HTTP host "https://cloud.google.com/" is not reachable. Reason: An error occurred while checking the HTTP host: Operation timed out
-
-! Doctor found issues in 4 categories.
-```
-
-
-
-
-
-
-
-## <font face="Times New Roman">Problem :</font>
-
-```
-(base) bogon:flutter_app_todo gsq$ flutter run
-Launching lib/main.dart on iPhone 14 Pro in debug mode...
-Warning: CocoaPods minimum required version 1.10.0 or greater not installed. Skipping pod install.
-  CocoaPods is used to retrieve the iOS and macOS platform side's plugin code that responds to your plugin usage on the Dart side.
-  Without CocoaPods, plugins will not work on iOS or macOS.
-  For more info, see https://flutter.dev/platform-plugins
-To upgrade see https://guides.cocoapods.org/using/getting-started.html#installation for instructions.
-```
-
-### Solutions
-
-Possible Solution 1. 
-
-```bash
-gem sources -l
-gem sources -a https://gems.ruby-china.com
-sudo gem update --system
-```
-
-Possible Solution 2.
-
-```bash
-sudo xcrun gem install cocoapods
-```
-
-Possible Solution 3.
-
-Use `https://raw.githubusercontent.com/Homebrew/install/master/install.sh` to install homebrew.
-Use `https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer` to install rvm.
-
-```bash
-source /Users/'admin'/.rvm/scripts/rvm
-rvm -v
-rvm list known
-(optional) rvm autolibs read-only
-rvm install 2.7.7 --disable-binary
-sudo gem install cocoapods
-```
-
-Reference: [[1](https://blog.csdn.net/albert12336/article/details/105543137)], [[2](https://juejin.cn/post/6997716188096626719)]
-
-#### Sub-problem: 
-
-> [!] Oh no, an error occurred.
-
-Possible Solutions: 
-
-```
-(base) MacBook-Pro:ios gsq$ rm -rf ~/.cocoapods/repos/trunk
-(base) MacBook-Pro:ios gsq$ pod install
-Analyzing dependencies
-cloud_firestore: Using Firebase SDK version '10.3.0' defined in 'firebase_core'
-firebase_auth: Using Firebase SDK version '10.3.0' defined in 'firebase_core'
-firebase_core: Using Firebase SDK version '10.3.0' defined in 'firebase_core'
-Adding spec repo `trunk` with CDN `https://cdn.cocoapods.org/`
-Downloading dependencies
-Installing BoringSSL-GRPC (0.0.24)
-Installing Firebase (10.3.0)
-Installing FirebaseAuth (10.3.0)
-Installing FirebaseCore (10.3.0)
-Installing FirebaseCoreInternal (10.5.0)
-Installing FirebaseFirestore (10.3.0)
-Installing Flutter (1.0.0)
-Installing GTMSessionFetcher (3.1.0)
-Installing GoogleUtilities (7.11.0)
-Installing Libuv-gRPC (0.0.10)
-Installing PromisesObjC (2.1.1)
-Installing abseil (1.20211102.0)
-Installing cloud_firestore (4.4.0)
-Installing firebase_auth (4.2.6)
-Installing firebase_core (2.5.0)
-Installing gRPC-C++ (1.44.0)
-Installing gRPC-Core (1.44.0)
-Installing leveldb-library (1.22.1)
-Installing nanopb (2.30909.0)
-Installing path_provider_foundation (0.0.1)
-Generating Pods project
-Integrating client project
-Pod installation complete! There are 5 dependencies from the Podfile and 20 total pods installed.
-
-[!] CocoaPods did not set the base configuration of your project because your project already has a custom config set. In order for CocoaPods integration to work at all, please either set the base configurations of the target `Runner` to `Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig` or include the `Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig` in your build configuration (`Flutter/Release.xcconfig`).
-
-(base) MacBook-Pro:flutter_app_todo gsq$ flutter run
-Launching lib/main.dart on iPhone 14 in debug mode...
-Running pod install...                                             15.1s
-Running Xcode build...                                                  
- └─Compiling, linking and signing...                        13.0s
-Xcode build done.                                           489.2s
-Syncing files to device iPhone 14...                               407ms
-
-Flutter run key commands.
-r Hot reload. 🔥🔥🔥
-R Hot restart.
-h List all available interactive commands.
-d Detach (terminate "flutter run" but leave application running).
-c Clear the screen
-q Quit (terminate the application on the device).
-
-💪 Running with sound null safety 💪
-
-An Observatory debugger and profiler on iPhone 14 is available at: http://127.0.0.1:52156/D6j95DIIYYg=/
-The Flutter DevTools debugger and profiler on iPhone 14 is available at:
-http://127.0.0.1:9101?uri=http://127.0.0.1:52156/D6j95DIIYYg=/
-```
-
-不要删除掉 Podfile 重新 `pod init` 是没有作用的
-
-`pod install --verbose --no-repo-update`
-
-pod install 即使换源也非常耗费时间 
-[[Cloud Firestore\] doesn't work with IOS (get stuck on pod install gRPC-Core) · Issue #2533 · firebase/flutterfire]](https://github.com/firebase/flutterfire/issues/2533)
-[[正确的使用pod install 和 pod update - CocoaPods](https://www.jianshu.com/p/8e31160b4a7d)]
-
-
-
-
-
-
+等来了配置结果
 
 ```bash
 (base) MacBook-Pro:ios gsq$ pod install --verbose --no-repo-update

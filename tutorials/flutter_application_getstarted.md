@@ -28,3 +28,6 @@ Demo running:
 
 <img src="../assets/image-20230125184958530.png" alt="image-20230125184958530" style="zoom:40%;" />
 
+
+
+`sudo gem install cocoapods -v 1.8.4` to deal with warning.
