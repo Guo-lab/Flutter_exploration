@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; //@ https://pub.dev/packages/google_fonts
 
@@ -21,6 +22,49 @@ class _AuthFormState extends State<AuthForm> {
   var _password    = '';
   bool isLoginPage = false;
   // ----------------------------------
+
+
+  // +++++++++++++++++ Login Register Function ++++++++++++++++++++++
+  // After Widget architecture built, async with users
+  // ignore: non_constant_identifier_names
+  Auth_interact_db () {
+    final validity = _formkey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+
+    if (validity) {
+      _formkey.currentState!.save();
+      // Sign in or Register both submit the data in the form and Auth State will change
+      submitForm(_email, _password, _username);
+    }
+  }
+  submitForm (String email, String password, String username) async { //@ Utilize Firebase https://pub.dev/packages?q=
+    //await Firebase.initializeApp();
+    
+    final auth = FirebaseAuth.instance;                               // https://firebase.google.com/docs/firestore/quickstart
+    UserCredential authResult;
+    try {
+      if (isLoginPage) {
+        authResult = await auth.signInWithEmailAndPassword(email: email, password: password);
+      } else {
+        // User Register
+        authResult = await auth.createUserWithEmailAndPassword(email: email, password: password);
+        String uid = authResult.user!.uid;
+
+        // AppUser appUser = AppUser(uid: authResult.user!.uid, name: authResult.user!.displayName);
+
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          "username": username,
+          "email":    email,
+        });
+      }
+    } catch (err) { 
+      // ignore: avoid_print
+      print('submitForm() partially handled ${err.runtimeType}. :( ');
+      rethrow; 
+    }
+  }
+  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ After this, goto main to design router to HomePage
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +171,7 @@ class _AuthFormState extends State<AuthForm> {
                     width: double.infinity,
                     height: 70, 
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () { Auth_interact_db(); },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange[200], 
                         foregroundColor: Colors.red,
@@ -166,7 +210,8 @@ class _AuthFormState extends State<AuthForm> {
 
         ],
       ),);
-
   } // Widget Build 
+
+
 
 } // class _AuthFormState

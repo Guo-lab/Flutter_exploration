@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>903697457669-oq81hf9qebtbq0beaimdkcbqnh67psv6.apps.googleusercontent.com</string>
+	<string>903697457669-3e5oq6314knbcn1kbao65gbcvs203a44.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.903697457669-oq81hf9qebtbq0beaimdkcbqnh67psv6</string>
+	<string>com.googleusercontent.apps.903697457669-3e5oq6314knbcn1kbao65gbcvs203a44</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAtSvM7VUphaYZzQ_y1RoCwPY_lz8cfjew</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.flutterAppTodo</string>
+	<string>com.gsq.flutterAppTodo</string>
 	<key>PROJECT_ID</key>
 	<string>flutter-app-todo-c908d</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:903697457669:ios:38b49f5d27f809ffa8726c</string>
+	<string>1:903697457669:ios:d648d5aa9875fc8ba8726c</string>
 </dict>
 </plist>
